@@ -110,13 +110,13 @@ export function GameSetup({ variant, onStartGame, onBack }: GameSetupProps) {
 
             <div className="p-4 space-y-4">
               {/* vs Dartbot toggle */}
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <span className="font-medium">vs. Dartbot</span>
                 <ToggleSwitch
                   checked={settings.vsDartbot}
                   onChange={(checked) => updateSetting('vsDartbot', checked)}
                 />
-              </div>
+              </div> */}
 
               {/* Single/Teams toggle */}
               <div className="bg-secondary/30 rounded-2xl p-1">

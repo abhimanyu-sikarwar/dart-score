@@ -5,6 +5,9 @@ import { Button } from '@/components/ui/button';
 import { DartThrow, Multiplier } from '@/lib/types';
 import { createDartThrow, calculateTurnScore } from '@/lib/game-logic';
 import { cn } from '@/lib/utils';
+import { DartboardInput } from './dartboard-input';
+import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
+import { Grid3X3, Target } from 'lucide-react';
 
 interface DartInputProps {
   currentTurn: DartThrow[];
@@ -14,6 +17,8 @@ interface DartInputProps {
   disabled?: boolean;
 }
 
+type InputMode = 'grid' | 'dartboard';
+
 export function DartInput({
   currentTurn,
   onAddDart,
@@ -22,6 +27,7 @@ export function DartInput({
   disabled,
 }: DartInputProps) {
   const [pendingSegment, setPendingSegment] = useState<number | null>(null);
+  const [inputMode, setInputMode] = useState<InputMode>('grid');
 
   const handleSegmentClick = (segment: number) => {
     if (currentTurn.length >= 3 || disabled) return;
@@ -65,6 +71,11 @@ export function DartInput({
     }
   };
 
+  const handleDartboardClick = (segment: number, multiplier: Multiplier) => {
+    if (currentTurn.length >= 3 || disabled) return;
+    onAddDart(createDartThrow(segment, multiplier));
+  };
+
   const turnScore = calculateTurnScore(currentTurn);
   const pendingScore = pendingSegment !== null ? pendingSegment : 0;
   const dartsRemaining = 3 - currentTurn.length - (pendingSegment !== null ? 1 : 0);
@@ -89,6 +100,33 @@ export function DartInput({
 
   return (
     <div className="bg-card p-3 sm:p-4 space-y-3 pb-[env(safe-area-inset-bottom)] border-t border-border">
+      {/* Input mode toggle */}
+      <div className="flex items-center justify-between px-1">
+        <ToggleGroup
+          type="single"
+          value={inputMode}
+          onValueChange={(value) => value && setInputMode(value as InputMode)}
+          className="bg-secondary/50 p-1 rounded-lg"
+        >
+          <ToggleGroupItem
+            value="grid"
+            aria-label="Grid input"
+            className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 h-8"
+          >
+            <Grid3X3 className="h-4 w-4 mr-1.5" />
+            <span className="text-sm">Grid</span>
+          </ToggleGroupItem>
+          <ToggleGroupItem
+            value="dartboard"
+            aria-label="Dartboard input"
+            className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-3 h-8"
+          >
+            <Target className="h-4 w-4 mr-1.5" />
+            <span className="text-sm">Board</span>
+          </ToggleGroupItem>
+        </ToggleGroup>
+      </div>
+
       {/* Current turn display */}
       <div className="flex items-center justify-between px-1">
         <div className="flex gap-2">
@@ -116,92 +154,108 @@ export function DartInput({
         </div>
       </div>
 
-      {/* Multiplier selection - shows when a number is pending */}
-      {pendingSegment !== null && (
-        <div className="flex gap-2 justify-center py-2.5 bg-[#D9492C]/10 rounded-xl border border-[#D9492C]/30">
-          <span className="text-[#FE5735] font-bold self-center text-base sm:text-lg mr-2">
-            {formatPending(pendingSegment)}
-          </span>
-          <Button
-            size="sm"
-            variant="outline"
-            className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-secondary/50 hover:bg-secondary border-border"
-            onClick={() => handleMultiplierSelect('single')}
-          >
-            Single
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20"
-            onClick={() => handleMultiplierSelect('double')}
-          >
-            Double
-          </Button>
-          {pendingSegment !== 25 && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
-              onClick={() => handleMultiplierSelect('triple')}
-            >
-              Triple
-            </Button>
-          )}
-        </div>
-      )}
+      {inputMode === 'grid' ? (
+        <>
+          
 
-      {/* Number grid */}
-      <div className="space-y-1.5">
-        {segments.map((row, rowIdx) => (
-          <div key={rowIdx} className="flex gap-1.5 justify-center">
-            {row.map((num) => (
+          {/* Number grid */}
+          <div className="space-y-1.5">
+            {segments.map((row, rowIdx) => (
+              <div key={rowIdx} className="flex gap-1.5 justify-center">
+                {row.map((num) => (
+                  <button
+                    key={num}
+                    className={cn(
+                      'num-btn flex-1 max-w-[60px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
+                      pendingSegment === num
+                        ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25'
+                        : 'bg-secondary/50 text-foreground border-border hover:bg-secondary hover:border-muted-foreground/30',
+                      (disabled || (currentTurn.length >= 3 && pendingSegment === null)) && 'opacity-50 cursor-not-allowed'
+                    )}
+                    onClick={() => handleSegmentClick(num)}
+                    disabled={disabled || (currentTurn.length >= 3 && pendingSegment === null)}
+                  >
+                    {num}
+                  </button>
+                ))}
+              </div>
+            ))}
+
+            {/* Bull and Miss */}
+            <div className="flex gap-2 justify-center pt-1">
               <button
-                key={num}
                 className={cn(
-                  'num-btn flex-1 max-w-[60px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
-                  pendingSegment === num
+                  'num-btn flex-1 max-w-[130px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
+                  pendingSegment === 25
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25'
                     : 'bg-secondary/50 text-foreground border-border hover:bg-secondary hover:border-muted-foreground/30',
                   (disabled || (currentTurn.length >= 3 && pendingSegment === null)) && 'opacity-50 cursor-not-allowed'
                 )}
-                onClick={() => handleSegmentClick(num)}
+                onClick={() => handleSegmentClick(25)}
                 disabled={disabled || (currentTurn.length >= 3 && pendingSegment === null)}
               >
-                {num}
+                Bull
               </button>
-            ))}
+              <button
+                className={cn(
+                  'num-btn flex-1 max-w-[130px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
+                  'bg-secondary/30 text-muted-foreground border-border hover:bg-secondary/50',
+                  (disabled || currentTurn.length >= 3) && 'opacity-50 cursor-not-allowed'
+                )}
+                onClick={handleMiss}
+                disabled={disabled || currentTurn.length >= 3}
+              >
+                Miss
+              </button>
+            </div>
           </div>
-        ))}
-
-        {/* Bull and Miss */}
-        <div className="flex gap-2 justify-center pt-1">
-          <button
-            className={cn(
-              'num-btn flex-1 max-w-[130px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
-              pendingSegment === 25
-                ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/25'
-                : 'bg-secondary/50 text-foreground border-border hover:bg-secondary hover:border-muted-foreground/30',
-              (disabled || (currentTurn.length >= 3 && pendingSegment === null)) && 'opacity-50 cursor-not-allowed'
-            )}
-            onClick={() => handleSegmentClick(25)}
-            disabled={disabled || (currentTurn.length >= 3 && pendingSegment === null)}
-          >
-            Bull
-          </button>
-          <button
-            className={cn(
-              'num-btn flex-1 max-w-[130px] h-12 sm:h-14 text-lg sm:text-xl font-semibold rounded-xl border transition-all',
-              'bg-secondary/30 text-muted-foreground border-border hover:bg-secondary/50',
-              (disabled || currentTurn.length >= 3) && 'opacity-50 cursor-not-allowed'
-            )}
-            onClick={handleMiss}
+          {/* Multiplier selection - shows when a number is pending */}
+          {pendingSegment !== null && (
+            <div className="flex gap-2 justify-center py-2.5 bg-[#D9492C]/10 rounded-xl border border-[#D9492C]/30">
+              <span className="text-[#FE5735] font-bold self-center text-base sm:text-lg mr-2">
+                {formatPending(pendingSegment)}
+              </span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-secondary/50 hover:bg-secondary border-border"
+                onClick={() => handleMultiplierSelect('single')}
+              >
+                Single
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20"
+                onClick={() => handleMultiplierSelect('double')}
+              >
+                Double
+              </Button>
+              {pendingSegment !== 25 && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="min-w-[60px] sm:min-w-[75px] h-10 sm:h-11 text-sm sm:text-base font-medium bg-red-500/10 border-red-500/30 text-red-400 hover:bg-red-500/20"
+                  onClick={() => handleMultiplierSelect('triple')}
+                >
+                  Triple
+                </Button>
+              )}
+            </div>
+          )}
+        </>
+      ) : (
+        /* Dartboard input */
+        <div className="py-2">
+          <DartboardInput
+            onSegmentClick={handleDartboardClick}
             disabled={disabled || currentTurn.length >= 3}
-          >
-            Miss
-          </button>
+          />
+          <p className="text-center text-sm text-muted-foreground mt-2">
+            Tap on the dartboard to record your throw
+          </p>
         </div>
-      </div>
+      )}
 
       {/* Action buttons */}
       <div className="flex gap-3 pt-1">
