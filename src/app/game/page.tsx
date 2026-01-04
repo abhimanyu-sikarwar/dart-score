@@ -107,7 +107,7 @@ export default function GamePage() {
       </header>
 
       {/* Scrollable content area */}
-      <div className="flex-1 overflow-y-auto pb-[340px] sm:pb-[320px]">
+      <div className="flex-1 overflow-y-auto pb-[480px] sm:pb-[420px]">
         {state.mode === 'cricket' ? (
           <CricketBoard
             players={state.players}
