@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface LandingPageProps {
   onStartGame?: () => void;
@@ -47,7 +48,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                 </h1>
                 <p className="text-lg sm:text-xl text-muted-foreground max-w-md">
                   The ultimate dart scoring app for you and your friends.
-                  Quick input, multiple game modes, instant results.
+                  X01, Cricket, teams, and more. Free forever.
                 </p>
               </div>
 
@@ -70,19 +71,23 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                 </Button>
               </div>
 
-              {/* Stats */}
-              <div className="flex gap-8 pt-4">
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold text-primary">501</div>
-                  <div className="text-sm text-muted-foreground">Classic Mode</div>
+              {/* Game Modes */}
+              <div className="flex flex-wrap gap-4 pt-4">
+                <div className="bg-card/50 rounded-xl px-4 py-3 border border-border/50">
+                  <div className="text-2xl font-bold text-primary">X01</div>
+                  <div className="text-xs text-muted-foreground">301 / 501 / 701</div>
                 </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold text-primary">301</div>
-                  <div className="text-sm text-muted-foreground">Quick Game</div>
+                <div className="bg-card/50 rounded-xl px-4 py-3 border border-border/50">
+                  <div className="text-2xl font-bold text-primary">Cricket</div>
+                  <div className="text-xs text-muted-foreground">15-20 & Bull</div>
                 </div>
-                <div>
-                  <div className="text-2xl sm:text-3xl font-bold text-primary">Cricket</div>
-                  <div className="text-sm text-muted-foreground">Strategy</div>
+                <div className="bg-card/50 rounded-xl px-4 py-3 border border-border/50">
+                  <div className="text-2xl font-bold text-primary">Teams</div>
+                  <div className="text-xs text-muted-foreground">Group Play</div>
+                </div>
+                <div className="bg-card/50 rounded-xl px-4 py-3 border border-border/50">
+                  <div className="text-2xl font-bold text-primary">Custom</div>
+                  <div className="text-xs text-muted-foreground">Any Score</div>
                 </div>
               </div>
             </div>
@@ -103,40 +108,71 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
 
                     {/* App content preview */}
                     <div className="p-4 space-y-3">
-                      <div className="text-center">
-                        <div className="text-sm text-muted-foreground">501</div>
-                        <div className="text-xs text-muted-foreground">Player 1&apos;s turn</div>
+                      {/* Header */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <DartLogo className="w-5 h-5 text-primary" />
+                          <div>
+                            <div className="text-sm font-bold">501</div>
+                            <div className="text-[10px] text-muted-foreground">Player 1&apos;s turn</div>
+                          </div>
+                        </div>
+                        <div className="flex gap-1">
+                          <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center">
+                            <UndoIcon className="w-3 h-3" />
+                          </div>
+                        </div>
                       </div>
 
                       {/* Score cards preview */}
                       <div className="space-y-2">
-                        <div className="bg-card rounded-lg p-3 border border-primary/50">
+                        <div className="bg-primary/10 rounded-xl p-3 border border-primary/30">
                           <div className="flex justify-between items-center">
-                            <span className="font-medium">Player 1</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">P1</div>
+                              <span className="font-medium text-sm">Player 1</span>
+                            </div>
                             <span className="text-2xl font-bold">341</span>
                           </div>
+                          <div className="flex gap-1 mt-2">
+                            <span className="text-[10px] px-1.5 py-0.5 bg-primary/20 rounded">T20</span>
+                            <span className="text-[10px] px-1.5 py-0.5 bg-primary/20 rounded">T20</span>
+                          </div>
                         </div>
-                        <div className="bg-card rounded-lg p-3 border border-border">
+                        <div className="bg-card rounded-xl p-3 border border-border">
                           <div className="flex justify-between items-center">
-                            <span className="font-medium">Player 2</span>
+                            <div className="flex items-center gap-2">
+                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">P2</div>
+                              <span className="font-medium text-sm">Player 2</span>
+                            </div>
                             <span className="text-2xl font-bold">285</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Input preview */}
-                      <div className="bg-card rounded-lg p-3 space-y-2">
-                        <div className="flex justify-center gap-2">
-                          <div className="px-3 py-1 bg-primary/20 rounded text-sm">T20</div>
-                          <div className="px-3 py-1 bg-primary/20 rounded text-sm">T20</div>
-                          <div className="px-3 py-1 bg-muted rounded text-sm">-</div>
+                      <div className="bg-card rounded-xl p-3 space-y-2 border border-border">
+                        <div className="flex justify-between items-center">
+                          <div className="flex gap-1">
+                            <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center text-xs font-medium">T20</div>
+                            <div className="w-8 h-8 bg-primary/20 rounded-lg flex items-center justify-center text-xs font-medium">T20</div>
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center text-xs">-</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-lg font-bold text-primary">120</div>
+                          </div>
                         </div>
                         <div className="grid grid-cols-5 gap-1">
-                          {[1, 2, 3, 4, 5].map(n => (
-                            <div key={n} className="aspect-square bg-secondary rounded flex items-center justify-center text-sm font-medium">
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(n => (
+                            <div key={n} className="aspect-square bg-secondary rounded-lg flex items-center justify-center text-xs font-medium">
                               {n}
                             </div>
                           ))}
+                        </div>
+                        <div className="grid grid-cols-3 gap-1">
+                          <div className="py-1.5 bg-secondary rounded-lg text-center text-[10px] font-medium">Single</div>
+                          <div className="py-1.5 bg-primary text-white rounded-lg text-center text-[10px] font-medium">Double</div>
+                          <div className="py-1.5 bg-secondary rounded-lg text-center text-[10px] font-medium">Triple</div>
                         </div>
                       </div>
                     </div>
@@ -156,46 +192,76 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
               Everything you need
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Designed for quick score entry and seamless gameplay tracking
+              Professional-grade scoring with a simple, intuitive interface
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <FeatureCard
               icon={<TargetIcon />}
-              title="Multiple Game Modes"
-              description="Play 501, 301, or Cricket. Switch between modes instantly."
+              title="X01 Games"
+              description="Play 301, 501, 701, or set any custom starting score. Full double-in/out and master options."
+            />
+            <FeatureCard
+              icon={<CricketIcon />}
+              title="Cricket Mode"
+              description="Standard Cricket with 15-20 and Bull. Track marks and points with visual indicators."
             />
             <FeatureCard
               icon={<UsersIcon />}
-              title="Unlimited Players"
-              description="Track scores for 1 or more players. Perfect for group games."
+              title="Teams & Players"
+              description="Single players or team mode. Add unlimited players and track everyone's score."
+            />
+            <FeatureCard
+              icon={<SettingsIcon />}
+              title="Match Settings"
+              description="Best-of or First-to format. Configure legs, sets, and match count to your preference."
             />
             <FeatureCard
               icon={<ZapIcon />}
-              title="Quick Score Entry"
-              description="Tap the number, then single/double/triple. It's that simple."
+              title="Dual Input Modes"
+              description="Switch between number grid and interactive dartboard. Choose what works best for you."
             />
             <FeatureCard
               icon={<UndoIcon />}
-              title="Undo Support"
-              description="Made a mistake? Undo individual darts or entire turns."
+              title="Full Undo Support"
+              description="Remove individual darts or undo entire turns. Fix mistakes without restarting."
+            />
+            <FeatureCard
+              icon={<TrophyIcon />}
+              title="Smart Win Detection"
+              description="Automatic bust detection, double-out validation, and winner announcement."
+            />
+            <FeatureCard
+              icon={<DartboardIcon />}
+              title="Visual Dartboard"
+              description="Tap directly on a realistic dartboard. Pinch-to-zoom for precise triple and double hits."
+            />
+            <FeatureCard
+              icon={<ChartIcon />}
+              title="Checkout Rate"
+              description="Track your checkout percentage and improve your finishing game over time."
             />
             <FeatureCard
               icon={<SmartphoneIcon />}
               title="Mobile First"
-              description="Designed for one-handed use with thumb-friendly controls."
+              description="Designed for one-handed use. Thumb-friendly controls that work in any lighting."
             />
             <FeatureCard
-              icon={<TrophyIcon />}
-              title="Win Detection"
-              description="Automatic bust detection and double-out validation for 501/301."
+              icon={<GridIcon />}
+              title="Quick Grid Input"
+              description="Fast number grid with multiplier buttons. Perfect for rapid score entry during matches."
+            />
+            <FeatureCard
+              icon={<ZoomIcon />}
+              title="Pinch to Zoom"
+              description="Zoom into the dartboard for precise segment selection. Hit those tight doubles with ease."
             />
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* Input Modes Section */}
       <section className="py-16 sm:py-24 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold mb-6 gradient-text">
@@ -264,6 +330,16 @@ function TargetIcon() {
   );
 }
 
+function CricketIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 4l16 16" />
+      <path d="M20 4L4 20" />
+      <circle cx="12" cy="12" r="8" />
+    </svg>
+  );
+}
+
 function UsersIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -271,6 +347,15 @@ function UsersIcon() {
       <circle cx="9" cy="7" r="4" />
       <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function SettingsIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
     </svg>
   );
 }
@@ -283,9 +368,9 @@ function ZapIcon() {
   );
 }
 
-function UndoIcon() {
+function UndoIcon({ className }: { className?: string }) {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
       <path d="M3 7v6h6" />
       <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
     </svg>
@@ -310,6 +395,51 @@ function TrophyIcon() {
       <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
       <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
       <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+    </svg>
+  );
+}
+
+function ChartIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 3v18h18" />
+      <path d="m19 9-5 5-4-4-3 3" />
+    </svg>
+  );
+}
+
+function DartboardIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+      <line x1="12" y1="2" x2="12" y2="6" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+      <line x1="2" y1="12" x2="6" y2="12" />
+      <line x1="18" y1="12" x2="22" y2="12" />
+    </svg>
+  );
+}
+
+function GridIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect width="7" height="7" x="3" y="3" rx="1" />
+      <rect width="7" height="7" x="14" y="3" rx="1" />
+      <rect width="7" height="7" x="14" y="14" rx="1" />
+      <rect width="7" height="7" x="3" y="14" rx="1" />
+    </svg>
+  );
+}
+
+function ZoomIcon({ className }: { className?: string }) {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <circle cx="11" cy="11" r="8" />
+      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      <line x1="11" y1="8" x2="11" y2="14" />
+      <line x1="8" y1="11" x2="14" y2="11" />
     </svg>
   );
 }
