@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function RulesPage() {
   const router = useRouter();
@@ -17,6 +18,7 @@ export default function RulesPage() {
             <span className="text-xl font-bold">DartScore</span>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle className="w-9 h-9" />
             <Button variant="ghost" size="sm" onClick={() => router.push('/')}>
               Home
             </Button>

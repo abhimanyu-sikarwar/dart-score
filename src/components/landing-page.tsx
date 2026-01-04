@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface LandingPageProps {
   onStartGame?: () => void;
@@ -28,6 +29,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
             <span className="text-xl font-bold">DartScore</span>
           </div>
           <div className="flex items-center gap-2">
+            <ThemeToggle className="w-9 h-9" />
             <Button variant="ghost" size="sm" onClick={() => router.push('/rules')}>
               Rules
             </Button>
@@ -76,7 +78,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
               </div>
 
               {/* Game Modes */}
-              <div className="flex flex-wrap gap-4 pt-4">
+              {/* <div className="flex flex-wrap gap-4 pt-4">
                 <div className="bg-card/50 rounded-xl px-4 py-3 border border-border/50">
                   <div className="text-2xl font-bold text-primary">X01</div>
                   <div className="text-xs text-muted-foreground">301 / 501 / 701</div>
@@ -93,7 +95,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                   <div className="text-2xl font-bold text-primary">Custom</div>
                   <div className="text-xs text-muted-foreground">Any Score</div>
                 </div>
-              </div>
+              </div> */}
             </div>
 
             {/* Phone Mockup */}
@@ -118,7 +120,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                           <DartLogo className="w-5 h-5 text-primary" />
                           <div>
                             <div className="text-sm font-bold">501</div>
-                            <div className="text-[10px] text-muted-foreground">Player 1&apos;s turn</div>
+                            <div className="text-[10px] text-muted-foreground">Abhimanyu Sikarwar&apos;s turn</div>
                           </div>
                         </div>
                         <div className="flex gap-1">
@@ -133,8 +135,8 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                         <div className="bg-primary/10 rounded-xl p-3 border border-primary/30">
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">P1</div>
-                              <span className="font-medium text-sm">Player 1</span>
+                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">AB</div>
+                              <span className="font-medium text-sm">Abhimanyu</span>
                             </div>
                             <span className="text-2xl font-bold">341</span>
                           </div>
@@ -146,8 +148,8 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
                         <div className="bg-card rounded-xl p-3 border border-border">
                           <div className="flex justify-between items-center">
                             <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">P2</div>
-                              <span className="font-medium text-sm">Player 2</span>
+                              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs">AR</div>
+                              <span className="font-medium text-sm">Arjun</span>
                             </div>
                             <span className="text-2xl font-bold">285</span>
                           </div>
@@ -200,7 +202,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-2">
             <FeatureCard
               icon={<TargetIcon />}
               title="X01 Games"
@@ -303,9 +305,9 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode; title: string; description: string }) {
   return (
-    <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-colors">
-      <CardContent className="p-6">
-        <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 text-primary">
+    <Card className="bg-card/50 border-border/50 hover:border-primary/30 transition-colors p-0">
+      <CardContent className="p-2">
+        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-4 text-primary">
           {icon}
         </div>
         <h3 className="font-semibold text-lg mb-2">{title}</h3>

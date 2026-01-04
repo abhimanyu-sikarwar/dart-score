@@ -27,7 +27,6 @@ function DartLogo({ className }: { className?: string }) {
 export default function GamePage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [gameConfig, setGameConfig] = useState<GameConfig | null>(null);
 
   const {
     state,
@@ -44,7 +43,6 @@ export default function GamePage() {
     const storedConfig = localStorage.getItem('dartGameConfig');
     if (storedConfig) {
       const config: GameConfig = JSON.parse(storedConfig);
-      setGameConfig(config);
       startNewGame(config.mode, config.players, config.startingScore);
     } else {
       // No config found, redirect to settings

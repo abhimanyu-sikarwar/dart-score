@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { ThemeToggle } from '@/components/theme-toggle';
 import { useState } from 'react';
 
 interface GameControlsProps {
@@ -31,7 +32,8 @@ export function GameControls({
   const [showNewGameDialog, setShowNewGameDialog] = useState(false);
 
   return (
-    <div className="flex gap-1.5 sm:gap-2 flex-shrink-0">
+    <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+      <ThemeToggle className="w-8 h-8 sm:w-9 sm:h-9" />
       {isGameOver ? (
         <Button size="sm" className="h-8 sm:h-9 text-xs sm:text-sm font-medium" onClick={onResetGame}>
           Play Again
