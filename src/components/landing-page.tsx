@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 
 interface LandingPageProps {
   onStartGame?: () => void;
@@ -28,9 +27,14 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
             <DartLogo className="w-8 h-8 text-primary" />
             <span className="text-xl font-bold">DartScore</span>
           </div>
-          <Button onClick={handleStartGame} size="sm">
-            Start Playing
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm" onClick={() => router.push('/rules')}>
+              Rules
+            </Button>
+            <Button onClick={handleStartGame} size="sm">
+              Start Playing
+            </Button>
+          </div>
         </div>
       </nav>
 
