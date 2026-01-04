@@ -4,6 +4,7 @@ import { useState, Fragment } from 'react';
 import { Player, GameMode, DartThrow } from '@/lib/types';
 import { calculateTurnScore } from '@/lib/game-logic';
 import { cn } from '@/lib/utils';
+import { CheckoutHint } from './checkout-hint';
 
 interface ScoreboardProps {
   players: Player[];
@@ -57,8 +58,23 @@ export function Scoreboard({
     setExpandedPlayerId(prev => (prev === playerId ? null : playerId));
   };
 
+  const currentPlayer = players[currentPlayerIndex];
+  const currentPlayerDisplayScore = mode === 'cricket'
+    ? currentPlayer?.score
+    : (currentPlayer?.score ?? 0) - pendingScore;
+  const dartsRemaining = 3 - currentTurn.length;
+  const isGameOver = !!winnerId;
+
   return (
-    <div className="p-3 sm:p-4">
+    <div className="p-3 sm:p-4 space-y-3">
+      {/* Checkout Hint for X01 modes */}
+      {mode !== 'cricket' && currentPlayer && !isGameOver && (
+        <CheckoutHint
+          score={currentPlayerDisplayScore}
+          dartsRemaining={dartsRemaining}
+        />
+      )}
+
       <div className="bg-card rounded-xl border border-border overflow-hidden">
         <table className="w-full">
           <thead>
