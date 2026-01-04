@@ -1,4 +1,24 @@
-export type GameMode = '501' | '301' | 'cricket';
+export type GameMode = '501' | '301' | '701' | 'cricket';
+
+export type GameVariant = 'x01' | 'cricket';
+
+export type InOption = 'straight' | 'double' | 'master';
+export type OutOption = 'double' | 'master' | 'straight';
+export type MatchType = 'best-of' | 'first-to';
+export type MatchUnit = 'legs' | 'sets';
+
+export interface GameSettings {
+  variant: GameVariant;
+  startingScore: number; // 301, 501, 701, or custom
+  inOption: InOption;
+  outOption: OutOption;
+  matchType: MatchType;
+  matchCount: number;
+  matchUnit: MatchUnit;
+  checkoutRate: boolean;
+  vsDartbot: boolean;
+  teamMode: boolean;
+}
 
 export type Multiplier = 'single' | 'double' | 'triple';
 

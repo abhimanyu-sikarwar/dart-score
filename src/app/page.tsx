@@ -3,14 +3,15 @@
 import { useState } from 'react';
 import { useGameState } from '@/hooks/use-game-state';
 import { LandingPage } from '@/components/landing-page';
+import { GameVariantSelection } from '@/components/game-variant-selection';
 import { GameSetup } from '@/components/game-setup';
 import { Scoreboard } from '@/components/scoreboard';
 import { CricketBoard } from '@/components/cricket-board';
 import { DartInput } from '@/components/dart-input';
 import { GameControls } from '@/components/game-controls';
-import { GameMode } from '@/lib/types';
+import { GameMode, GameVariant } from '@/lib/types';
 
-type AppScreen = 'landing' | 'setup' | 'game';
+type AppScreen = 'landing' | 'variant-select' | 'setup' | 'game';
 
 function DartLogo({ className }: { className?: string }) {
   return (
@@ -22,6 +23,7 @@ function DartLogo({ className }: { className?: string }) {
 
 export default function Home() {
   const [screen, setScreen] = useState<AppScreen>('landing');
+  const [selectedVariant, setSelectedVariant] = useState<GameVariant>('x01');
   const {
     state,
     addDart,
@@ -37,22 +39,36 @@ export default function Home() {
     setScreen('game');
   };
 
-  const handleNewGame = () => {
+  const handleSelectVariant = (variant: GameVariant) => {
+    setSelectedVariant(variant);
     setScreen('setup');
+  };
+
+  const handleNewGame = () => {
+    setScreen('variant-select');
   };
 
   const handleBackToLanding = () => {
     setScreen('landing');
   };
 
+  const handleBackToVariantSelect = () => {
+    setScreen('variant-select');
+  };
+
   // Show landing page
   if (screen === 'landing') {
-    return <LandingPage onStartGame={() => setScreen('setup')} />;
+    return <LandingPage onStartGame={() => setScreen('variant-select')} />;
+  }
+
+  // Show variant selection screen
+  if (screen === 'variant-select') {
+    return <GameVariantSelection onSelectVariant={handleSelectVariant} onBack={handleBackToLanding} />;
   }
 
   // Show setup screen
   if (screen === 'setup') {
-    return <GameSetup onStartGame={handleStartGame} onBack={handleBackToLanding} />;
+    return <GameSetup variant={selectedVariant} onStartGame={handleStartGame} onBack={handleBackToVariantSelect} />;
   }
 
   // Show game screen
