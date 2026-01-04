@@ -1,13 +1,23 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface LandingPageProps {
-  onStartGame: () => void;
+  onStartGame?: () => void;
 }
 
 export function LandingPage({ onStartGame }: LandingPageProps) {
+  const router = useRouter();
+
+  const handleStartGame = () => {
+    if (onStartGame) {
+      onStartGame();
+    } else {
+      router.push('/settings');
+    }
+  };
   return (
     <div className="min-h-[100dvh] flex flex-col">
       {/* Navigation */}
@@ -17,7 +27,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
             <DartLogo className="w-8 h-8 text-primary" />
             <span className="text-xl font-bold">DartScore</span>
           </div>
-          <Button onClick={onStartGame} size="sm">
+          <Button onClick={handleStartGame} size="sm">
             Start Playing
           </Button>
         </div>
@@ -43,7 +53,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
 
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button
-                  onClick={onStartGame}
+                  onClick={handleStartGame}
                   size="lg"
                   className="text-lg h-14 px-8"
                 >
@@ -195,7 +205,7 @@ export function LandingPage({ onStartGame }: LandingPageProps) {
             No sign up required. Just enter player names and start throwing.
           </p>
           <Button
-            onClick={onStartGame}
+            onClick={handleStartGame}
             size="lg"
             className="text-lg h-14 px-12"
           >
