@@ -99,7 +99,7 @@ export function DartInput({
   };
 
   return (
-    <div className="bg-card p-3 sm:p-4 space-y-3 pb-[env(safe-area-inset-bottom)] border-t border-border">
+    <div className="bg-card p-3 sm:p-4 space-y-3 border-t border-border">
       {/* Input mode toggle */}
       <div className="flex items-center justify-between px-1">
         <ToggleGroup
