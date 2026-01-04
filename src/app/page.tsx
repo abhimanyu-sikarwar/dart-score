@@ -1,65 +1,94 @@
-import Image from "next/image";
+'use client';
+
+import { useGameState } from '@/hooks/use-game-state';
+import { GameSetup } from '@/components/game-setup';
+import { Scoreboard } from '@/components/scoreboard';
+import { CricketBoard } from '@/components/cricket-board';
+import { DartInput } from '@/components/dart-input';
+import { GameControls } from '@/components/game-controls';
+import { GameMode } from '@/lib/types';
 
 export default function Home() {
+  const {
+    state,
+    addDart,
+    removeLastDart,
+    submitTurn,
+    undoTurn,
+    startNewGame,
+    resetGame,
+  } = useGameState();
+
+  const handleStartGame = (mode: GameMode, players: string[], startingScore?: number) => {
+    startNewGame(mode, players, startingScore);
+  };
+
+  const handleNewGame = () => {
+    startNewGame('501', [], 501);
+  };
+
+  // Show setup screen if no players
+  if (state.players.length === 0) {
+    return (
+      <main className="min-h-[100dvh] bg-background flex items-center justify-center p-4">
+        <GameSetup onStartGame={handleStartGame} />
+      </main>
+    );
+  }
+
+  const currentPlayer = state.players[state.currentPlayerIndex];
+  const canUndo = state.currentTurn.length > 0 || state.players.some(p => p.turns.length > 0);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <main className="min-h-[100dvh] bg-background flex flex-col">
+      {/* Header - compact on mobile */}
+      <header className="border-b px-3 py-2 sm:px-4 sm:py-3 flex items-center justify-between bg-background sticky top-0 z-10">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-lg sm:text-xl font-bold truncate">
+            {state.mode === 'cricket' ? 'Cricket' : state.mode}
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="text-xs sm:text-sm text-muted-foreground truncate">
+            {currentPlayer.name}&apos;s turn
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        <GameControls
+          onUndoTurn={undoTurn}
+          onResetGame={resetGame}
+          onNewGame={handleNewGame}
+          canUndo={canUndo}
+          isGameOver={state.isGameOver}
+        />
+      </header>
+
+      {/* Scrollable content area - responsive padding for input panel */}
+      <div className="flex-1 overflow-y-auto pb-[320px] sm:pb-[300px]">
+        {state.mode === 'cricket' ? (
+          <CricketBoard
+            players={state.players}
+            currentPlayerIndex={state.currentPlayerIndex}
+            winnerId={state.winnerId}
+          />
+        ) : (
+          <Scoreboard
+            players={state.players}
+            currentPlayerIndex={state.currentPlayerIndex}
+            winnerId={state.winnerId}
+            mode={state.mode}
+            currentTurn={state.currentTurn}
+          />
+        )}
+      </div>
+
+      {/* Fixed bottom input panel */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg safe-area-bottom">
+        <DartInput
+          currentTurn={state.currentTurn}
+          onAddDart={addDart}
+          onRemoveLastDart={removeLastDart}
+          onSubmitTurn={submitTurn}
+          disabled={state.isGameOver}
+        />
+      </div>
+    </main>
   );
 }
