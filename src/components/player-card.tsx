@@ -1,7 +1,5 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Player, GameMode } from '@/lib/types';
 import { cn } from '@/lib/utils';
 
@@ -30,46 +28,69 @@ export function PlayerCard({
       : player.score;
 
   return (
-    <Card
+    <div
       className={cn(
-        'transition-all',
-        isCurrentPlayer && 'ring-2 ring-primary',
-        isWinner && 'bg-green-50 dark:bg-green-950 ring-2 ring-green-500'
+        'rounded-xl border transition-all p-4',
+        isCurrentPlayer && !isWinner && 'bg-primary/10 border-primary/50 shadow-lg shadow-primary/10',
+        !isCurrentPlayer && !isWinner && 'bg-card border-border',
+        isWinner && 'bg-green-500/10 border-green-500/50 shadow-lg shadow-green-500/10'
       )}
     >
-      <CardContent className="p-3 sm:p-4">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
-            <span className="font-semibold text-base sm:text-lg truncate">{player.name}</span>
-            {isCurrentPlayer && !isWinner && (
-              <Badge variant="secondary" className="text-[10px] sm:text-xs px-1.5 py-0 flex-shrink-0">
-                Now
-              </Badge>
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
+          {/* Player avatar/indicator */}
+          <div
+            className={cn(
+              'w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg font-bold flex-shrink-0',
+              isCurrentPlayer && !isWinner && 'bg-primary text-primary-foreground',
+              !isCurrentPlayer && !isWinner && 'bg-secondary text-muted-foreground',
+              isWinner && 'bg-green-500 text-white'
             )}
-            {isWinner && (
-              <Badge className="bg-green-500 text-white text-[10px] sm:text-xs px-1.5 py-0 flex-shrink-0">
-                Winner!
-              </Badge>
-            )}
+          >
+            {player.name.charAt(0).toUpperCase()}
           </div>
-          <div className="text-right flex-shrink-0">
-            <div
-              className={cn(
-                'text-2xl sm:text-3xl font-bold tabular-nums',
-                mode !== 'cricket' && displayScore <= 50 && 'text-orange-500',
-                mode !== 'cricket' && displayScore <= 20 && 'text-red-500'
+
+          <div className="min-w-0">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold text-base sm:text-lg truncate">{player.name}</span>
+              {isCurrentPlayer && !isWinner && (
+                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-primary/20 text-primary font-medium flex-shrink-0">
+                  Throwing
+                </span>
               )}
-            >
-              {displayScore}
+              {isWinner && (
+                <span className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 font-medium flex-shrink-0">
+                  Winner!
+                </span>
+              )}
             </div>
             {lastTurn && (
               <div className="text-xs sm:text-sm text-muted-foreground">
-                Last: {lastTurn.isBust ? 'BUST' : lastTurn.totalScore}
+                Last: {lastTurn.isBust ? (
+                  <span className="text-red-400">BUST</span>
+                ) : (
+                  <span className="text-primary">{lastTurn.totalScore}</span>
+                )}
               </div>
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+
+        <div className="text-right flex-shrink-0">
+          <div
+            className={cn(
+              'text-3xl sm:text-4xl font-bold tabular-nums',
+              mode !== 'cricket' && displayScore <= 50 && displayScore > 20 && 'text-yellow-400',
+              mode !== 'cricket' && displayScore <= 20 && 'text-primary',
+              isWinner && 'text-green-400',
+              !isWinner && mode === 'cricket' && 'text-foreground',
+              !isWinner && mode !== 'cricket' && displayScore > 50 && 'text-foreground'
+            )}
+          >
+            {displayScore}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

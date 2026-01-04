@@ -10,6 +10,7 @@ interface ScoreboardProps {
   winnerId?: string;
   mode: GameMode;
   currentTurn: DartThrow[];
+  pendingSegment?: number | null;
 }
 
 export function Scoreboard({
@@ -18,11 +19,12 @@ export function Scoreboard({
   winnerId,
   mode,
   currentTurn,
+  pendingSegment,
 }: ScoreboardProps) {
-  const pendingScore = calculateTurnScore(currentTurn);
+  const pendingScore = calculateTurnScore(currentTurn) + (pendingSegment ?? 0);
 
   return (
-    <div className="space-y-2 sm:space-y-3 p-3 sm:p-4">
+    <div className="space-y-3 p-3 sm:p-4">
       {players.map((player, index) => (
         <PlayerCard
           key={player.id}
